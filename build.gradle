@@ -1,0 +1,40 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.1'  // Using latest stable version instead of 3.4.0
+    id 'io.spring.dependency-management' version '1.1.6'
+}
+
+group = 'org.example'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Core Spring Boot starters
+    implementation 'org.springframework.boot:spring-boot-starter-web'  // For REST API
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'  // For JPA/Database operations
+    implementation 'org.springframework.boot:spring-boot-starter-validation'  // For input validation
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    // Database
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Lombok for reducing boilerplate code (optional but recommended)
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    // Test dependencies
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
