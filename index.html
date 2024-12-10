@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Store Management</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: sans-serif;
+            padding: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        .container {
+            margin: 15px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        th, td { padding: 8px; border: 1px solid #ddd; }
+        th { background: #f5f5f5; }
+        input, select, button {
+            padding: 5px;
+            margin: 5px 0;
+            width: 200px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            width: auto;
+        }
+    </style>
+</head>
+<body>
+<h1>Store Management</h1>
+
+<div class="container">
+    <h2>Products</h2>
+    <div>
+        <input type="text" id="productName" placeholder="Name">
+        <input type="text" id="productCategory" placeholder="Category">
+        <input type="number" id="productPrice" placeholder="Price" step="0.01">
+        <input type="number" id="productStock" placeholder="Stock">
+        <button onclick="addProduct()">Add Product</button>
+    </div>
+    <table id="productsTable">
+        <thead>
+        <tr>
+            <th>ID</th><th>Name</th><th>Category</th><th>Price</th>
+            <th>Stock</th><th>Actions</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="container">
+    <h2>Customers</h2>
+    <div>
+        <input type="text" id="customerName" placeholder="Name">
+        <input type="email" id="customerEmail" placeholder="Email">
+        <input type="tel" id="customerPhone" placeholder="Phone">
+        <button onclick="addCustomer()">Add Customer</button>
+    </div>
+    <table id="customersTable">
+        <thead>
+        <tr>
+            <th>ID</th><th>Name</th><th>Email</th><th>Phone</th>
+            <th>Points</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="container">
+    <h2>Sales</h2>
+    <div>
+        <select id="saleProduct"></select>
+        <select id="saleCustomer"></select>
+        <input type="number" id="saleQuantity" placeholder="Quantity">
+        <button onclick="processSale()">Process Sale</button>
+    </div>
+    <div>
+        <input type="datetime-local" id="startDate">
+        <input type="datetime-local" id="endDate">
+        <button onclick="fetchSales()">View Sales</button>
+    </div>
+    <table id="salesTable">
+        <thead>
+        <tr>
+            <th>ID</th><th>Product</th><th>Customer</th><th>Date</th>
+            <th>Quantity</th><th>Total</th>
+        </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+    const api = axios.create({ baseURL: 'http://localhost:8080/api' });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchProducts();
+        fetchCustomers();
+        setDefaultDates();
+    });
+
+    function setDefaultDates() {
+        const end = new Date();
+        const start = new Date();
+        start.setMonth(start.getMonth() - 1);
+        document.getElementById('startDate').value = start.toISOString().slice(0, 16);
+        document.getElementById('endDate').value = end.toISOString().slice(0, 16);
+    }
+
+    // Products
+    async function fetchProducts() {
+        const { data } = await api.get('/products');
+        document.querySelector('#productsTable tbody').innerHTML =
+            data.map(p => `
+                    <tr>
+                        <td>${p.productId}</td>
+                        <td>${p.name}</td>
+                        <td>${p.category}</td>
+                        <td>$${p.price.toFixed(2)}</td>
+                        <td>${p.stockQuantity}</td>
+                        <td><button onclick="updateStock(${p.productId})">Update Stock</button></td>
+                    </tr>
+                `).join('');
+
+        document.getElementById('saleProduct').innerHTML =
+            data.map(p => `<option value="${p.productId}">${p.name} - $${p.price}</option>`).join('');
+    }
+
+    async function addProduct() {
+        const product = {
+            name: document.getElementById('productName').value,
+            category: document.getElementById('productCategory').value,
+            price: parseFloat(document.getElementById('productPrice').value),
+            stockQuantity: parseInt(document.getElementById('productStock').value)
+        };
+        await api.post('/products', product);
+        fetchProducts();
+        ['productName', 'productCategory', 'productPrice', 'productStock']
+            .forEach(id => document.getElementById(id).value = '');
+    }
+
+    async function updateStock(id) {
+        const qty = prompt('Enter quantity change (+/-):');
+        if (qty) {
+            await api.put(`/products/${id}/stock?quantity=${qty}`);
+            fetchProducts();
+        }
+    }
+
+    // Customers
+    async function fetchCustomers() {
+        const { data } = await api.get('/customers');
+        document.querySelector('#customersTable tbody').innerHTML =
+            data.map(c => `
+                    <tr>
+                        <td>${c.customerId}</td>
+                        <td>${c.name}</td>
+                        <td>${c.email}</td>
+                        <td>${c.phoneNumber}</td>
+                        <td>${c.loyaltyPoints || 0}</td>
+                    </tr>
+                `).join('');
+
+        document.getElementById('saleCustomer').innerHTML =
+            data.map(c => `<option value="${c.customerId}">${c.name}</option>`).join('');
+    }
+
+    async function addCustomer() {
+        const customer = {
+            name: document.getElementById('customerName').value,
+            email: document.getElementById('customerEmail').value,
+            phoneNumber: document.getElementById('customerPhone').value,
+            loyaltyPoints: 0
+        };
+        await api.post('/customers', customer);
+        fetchCustomers();
+        ['customerName', 'customerEmail', 'customerPhone']
+            .forEach(id => document.getElementById(id).value = '');
+    }
+
+    // Sales
+    async function processSale() {
+        const sale = {
+            product: { productId: document.getElementById('saleProduct').value },
+            customer: { customerId: document.getElementById('saleCustomer').value },
+            quantity: parseInt(document.getElementById('saleQuantity').value)
+        };
+        try {
+            await api.post('/sales', sale);
+            fetchProducts();
+            fetchSales();
+            document.getElementById('saleQuantity').value = '';
+        } catch (error) {
+            alert('Sale failed. Check stock availability.');
+        }
+    }
+
+    async function fetchSales() {
+        const start = document.getElementById('startDate').value;
+        const end = document.getElementById('endDate').value;
+        const { data } = await api.get(`/sales?start=${start}&end=${end}`);
+        document.querySelector('#salesTable tbody').innerHTML =
+            data.map(s => `
+                    <tr>
+                        <td>${s.saleId}</td>
+                        <td>${s.product.name}</td>
+                        <td>${s.customer.name}</td>
+                        <td>${new Date(s.date).toLocaleString()}</td>
+                        <td>${s.quantity}</td>
+                        <td>$${s.totalAmount.toFixed(2)}</td>
+                    </tr>
+                `).join('');
+    }
+</script>
+</body>
+</html>
