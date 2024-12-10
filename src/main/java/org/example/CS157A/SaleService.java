@@ -5,8 +5,12 @@ import org.example.CS157A.Models.Sale;
 import org.example.CS157A.Repositories.SaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -37,4 +41,7 @@ public class SaleService {
         return saleRepository.findByDateBetween(start, end);
     }
 
+    public List<Sale> searchSales(String search) {
+        return saleRepository.searchAllColumns(search);
+    }
 }

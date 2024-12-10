@@ -29,6 +29,12 @@ public class SaleController {
         return saleService.getSalesByDateRange(start, end);
     }
 
+    @GetMapping("/search")
+    public List<Sale> searchSales(
+            @RequestParam(required = false) String search) {
+        return saleService.searchSales(search);
+    }
+
     @DeleteMapping("/{id}")
     public void deleteSale(@PathVariable Long id) {
         saleRepository.deleteById(id);
