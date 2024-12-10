@@ -1,7 +1,6 @@
 package org.example.CS157A;
 
-import org.example.CS157A.Product;
-import org.example.CS157A.ProductRepository;
+import org.example.CS157A.Repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import jakarta.transaction.Transactional;

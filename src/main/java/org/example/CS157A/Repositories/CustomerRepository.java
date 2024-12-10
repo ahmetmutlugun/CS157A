@@ -1,4 +1,4 @@
-package org.example.CS157A;
+package org.example.CS157A.Repositories;
 
 import  org.example.CS157A.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;

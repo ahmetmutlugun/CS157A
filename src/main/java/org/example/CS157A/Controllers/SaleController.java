@@ -1,4 +1,4 @@
-package org.example.CS157A;
+package org.example.CS157A.Controllers;
 
 import org.example.CS157A.Sale;
 import org.example.CS157A.SaleService;

@@ -1,5 +1,7 @@
-package org.example.CS157A;
+package org.example.CS157A.Controllers;
 
+import org.example.CS157A.Customer;
+import org.example.CS157A.Repositories.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

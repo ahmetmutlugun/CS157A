@@ -1,9 +1,8 @@
-package org.example.CS157A;
+package org.example.CS157A.Controllers;
 
 import org.example.CS157A.Product;
 import org.example.CS157A.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
