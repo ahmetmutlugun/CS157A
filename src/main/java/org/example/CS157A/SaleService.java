@@ -1,5 +1,7 @@
 package org.example.CS157A;
 
+import org.example.CS157A.Models.Product;
+import org.example.CS157A.Models.Sale;
 import org.example.CS157A.Repositories.SaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,4 +36,5 @@ public class SaleService {
     public List<Sale> getSalesByDateRange(LocalDateTime start, LocalDateTime end) {
         return saleRepository.findByDateBetween(start, end);
     }
+
 }

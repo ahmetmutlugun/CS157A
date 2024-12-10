@@ -1,6 +1,6 @@
 package org.example.CS157A.Controllers;
 
-import org.example.CS157A.Product;
+import org.example.CS157A.Models.Product;
 import org.example.CS157A.ProductService;
 import org.example.CS157A.Repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,7 @@
 package org.example.CS157A.Controllers;
 
 import org.example.CS157A.Repositories.SaleRepository;
-import org.example.CS157A.Sale;
+import org.example.CS157A.Models.Sale;
 import org.example.CS157A.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -30,7 +30,7 @@ public class SaleController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCustomer(@PathVariable Long id) {
+    public void deleteSale(@PathVariable Long id) {
         saleRepository.deleteById(id);
     }
 }

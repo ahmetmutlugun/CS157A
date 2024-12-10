@@ -1,6 +1,6 @@
 package org.example.CS157A.Repositories;
 
-import org.example.CS157A.Sale;
+import org.example.CS157A.Models.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.example.CS157A;
+package org.example.CS157A.Models;
 
 import jakarta.persistence.*;
 import lombok.Data;
