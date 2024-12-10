@@ -23,10 +23,8 @@ public class SaleService {
             throw new RuntimeException("Insufficient stock");
         }
 
-        // Update stock
         productService.updateStock(product.getProductId(), -sale.getQuantity());
 
-        // Calculate total amount
         sale.setTotalAmount(product.getPrice() * sale.getQuantity());
         sale.setDate(LocalDateTime.now());
 

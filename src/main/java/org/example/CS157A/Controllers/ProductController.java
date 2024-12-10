@@ -2,6 +2,7 @@ package org.example.CS157A.Controllers;
 
 import org.example.CS157A.Product;
 import org.example.CS157A.ProductService;
+import org.example.CS157A.Repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
@@ -11,6 +12,8 @@ import java.util.List;
 public class ProductController {
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductRepository productRepository;
 
     @GetMapping
     public List<Product> getAllProducts() {
@@ -32,5 +35,10 @@ public class ProductController {
             @PathVariable Long id,
             @RequestParam Integer quantity) {
         return productService.updateStock(id, quantity);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        productRepository.deleteById(id);
     }
 }

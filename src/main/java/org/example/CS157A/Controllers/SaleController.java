@@ -1,5 +1,6 @@
 package org.example.CS157A.Controllers;
 
+import org.example.CS157A.Repositories.SaleRepository;
 import org.example.CS157A.Sale;
 import org.example.CS157A.SaleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import java.util.List;
 public class SaleController {
     @Autowired
     private SaleService saleService;
+    @Autowired
+    private SaleRepository saleRepository;
 
     @PostMapping
     public Sale processSale(@RequestBody Sale sale) {
@@ -24,5 +27,10 @@ public class SaleController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
         return saleService.getSalesByDateRange(start, end);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteCustomer(@PathVariable Long id) {
+        saleRepository.deleteById(id);
     }
 }
